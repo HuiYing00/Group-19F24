@@ -8,10 +8,11 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Insurance Application"
-        android:textSize="100dp"
+        android:textSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,6 +20,7 @@
         app:layout_constraintVertical_bias="0.025" />
 
     <TextView
+        android:id="@+id/text_score"
         android:layout_width="194dp"
         android:layout_height="73dp"
         android:text="100%"
@@ -34,10 +36,11 @@
         android:id="@+id/button_id_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="248dp"
-        android:layout_marginBottom="620dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="140dp"
         android:text="START TRIP"
-        android:textSize="32dp"
+        android:textSize="16dp"
+        android:onClick="startTrip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -45,12 +48,37 @@
         android:id="@+id/button_id_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="236dp"
-        android:layout_marginBottom="620dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="140dp"
         android:text="END TRIP"
-        android:textSize="32dp"
+        android:textSize="16dp"
+        android:onClick="endTrip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/button_id_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="24dp"
+        android:text="Profile"
+        android:textSize="32dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="132dp" />
+
+    <Button
+        android:id="@+id/button_id_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="508dp"
+        android:text="Map"
+        android:textSize="32dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="200dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
