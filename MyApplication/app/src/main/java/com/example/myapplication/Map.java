@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,11 +35,13 @@ import java.util.Objects;
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     private final int PERM_FINE_LOCATION = 1;
+    private final LatLng destinationLatLng = new LatLng(43, -80); // Replace with your destination
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
 
     private GoogleMap myMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +50,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
-    }
 
+        //myMap.setMinZoomPreference(14);
+        //myMap.setMaxZoomPreference(20);
+    }
     private void getLastLocation()
     {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -64,6 +69,15 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                     currentLocation = location;
 
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
+                    if (mapFragment == null) {
+                        Log.e("MapInitialization", "Map Fragment is null");
+                        return;
+                    }
+                    else {
+                        Log.e("MapInitialization", "mapFragment has a value");
+                    }
+
                     mapFragment.getMapAsync(Map.this);
                 }
             }
@@ -74,9 +88,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap)
     {
         myMap = googleMap;
-        LatLng kitch = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        myMap.addMarker(new MarkerOptions().position(kitch).title("Kitchener"));
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(kitch));
+        LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        myMap.addMarker(new MarkerOptions().position(myLoc).title(""));
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 19));
     }
 
     @Override
