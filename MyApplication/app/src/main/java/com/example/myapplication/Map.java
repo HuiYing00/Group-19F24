@@ -9,27 +9,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.android.PolyUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,8 +45,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.util.Objects;
-
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     private final int PERM_FINE_LOCATION = 1;
@@ -53,6 +52,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
+    //private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
 
     private GoogleMap myMap;
 
@@ -63,8 +64,35 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         setContentView(R.layout.activity_map);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) return;
+
+                // Update user location dynamically
+                Location location = locationResult.getLastLocation();
+                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                //myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 19));
+            }
+        };
         getLastLocation();
+        startLocationUpdates();
     }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERM_FINE_LOCATION);
+            return;
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(
+                LocationRequest.create().setInterval(5000).setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY),
+                locationCallback,
+                Looper.getMainLooper()
+        );
+    }
+
     private void getLastLocation()
     {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -102,7 +130,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         myMap.addMarker(new MarkerOptions().position(myLoc).title(""));
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 19));
-        fetchRoute();
+        //fetchRoute();
     }
 
     private void fetchRoute() {
@@ -131,23 +159,37 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                 }
 
                 String responseData = response.body().string();
+
                 try {
                     // Parse the response to extract the route polyline
                     JSONObject json = new JSONObject(responseData);
                     JSONArray routes = json.getJSONArray("routes");
                     if (routes.length() > 0) {
                         JSONObject route = routes.getJSONObject(0);
-                        JSONObject overviewPolyline = route.getJSONObject("overview_polyline");
-                        String points = overviewPolyline.getString("points");
+                        JSONArray legs = route.getJSONArray("legs");
+                        JSONArray steps = legs.getJSONObject(0).getJSONArray("steps");
+
 
                         // Decode the polyline points and draw the route on the map
-                        //List<LatLng> routePolyline = PolyUtil.decode(points);\
-                        List<LatLng> routePolyline = decodePolyline(points);
+                        String polyline = route.getJSONObject("overview_polyline").getString("points");
+                        List<LatLng> decodedPath = PolyUtil.decode(polyline);
+                        Log.d("Polyline", "Encoded Polyline: " + polyline);
+
+                        for (LatLng point : decodedPath) {
+                            Log.d("DecodedPoint", "Lat: " + point.latitude + ", Lng: " + point.longitude);
+                        }
 
                         runOnUiThread(() -> myMap.addPolyline(new PolylineOptions()
-                                .addAll(routePolyline)
-                                .color(0xFF0000FF) // Blue color
+                                .addAll(decodedPath)
+                                .color(0xFF0000FF)
                                 .width(10)));
+
+//                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//                        for (LatLng point : decodedPath) {
+//                            builder.include(point);
+//                        }
+//                        myMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+
                     }
                 } catch (Exception e) {
                     Log.e("DirectionsAPI", "Error parsing JSON", e);
@@ -194,6 +236,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 //        textTitle.setText("The trip has started!");
 //        final TextView textScore=findViewById(R.id.text_score);
 //        textScore.setText("Loading...");
+        fetchRoute();
     }
     public void endTrip(View view){
         // logic to calculate and display score here
@@ -201,40 +244,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 //        textTitle.setText("Insurance Application");
 //        final TextView textScore=findViewById(R.id.text_score);
 //        textScore.setText("50%");
-    }
-
-    //Manual PolyLine Decoder because dependencies weren't working
-    public List<LatLng> decodePolyline(String encodedPath) {
-        List<LatLng> poly = new ArrayList<>();
-        int index = 0, len = encodedPath.length();
-        int lat = 0, lng = 0;
-
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encodedPath.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
-
-            shift = 0;
-            result = 0;
-            do {
-                b = encodedPath.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
-
-            poly.add(new LatLng(
-                    lat / 1E5,
-                    lng / 1E5
-            ));
-        }
-        return poly;
+        myMap.clear();
     }
 
 }
