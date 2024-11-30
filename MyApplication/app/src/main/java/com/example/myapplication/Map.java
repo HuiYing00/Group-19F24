@@ -28,14 +28,28 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.util.Objects;
 
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     private final int PERM_FINE_LOCATION = 1;
-    private final LatLng destinationLatLng = new LatLng(43, -80); // Replace with your destination
+    private final LatLng destinationLatLng = new LatLng(43.452969, -80.495064); // Replace with your destination
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -50,9 +64,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
-
-        //myMap.setMinZoomPreference(14);
-        //myMap.setMaxZoomPreference(20);
     }
     private void getLastLocation()
     {
@@ -91,6 +102,58 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         myMap.addMarker(new MarkerOptions().position(myLoc).title(""));
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 19));
+        fetchRoute();
+    }
+
+    private void fetchRoute() {
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
+                currentLocation.getLatitude() + "," + currentLocation.getLongitude() +
+                "&destination=" + destinationLatLng.latitude + "," + destinationLatLng.longitude +
+                "&key=" + "AIzaSyChliqG4c6ZN4VvfpHGRe1n8HPEf-0-hlA";
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("DirectionsAPI", "Request failed", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.e("DirectionsAPI", "Request failed: " + response);
+                    return;
+                }
+
+                String responseData = response.body().string();
+                try {
+                    // Parse the response to extract the route polyline
+                    JSONObject json = new JSONObject(responseData);
+                    JSONArray routes = json.getJSONArray("routes");
+                    if (routes.length() > 0) {
+                        JSONObject route = routes.getJSONObject(0);
+                        JSONObject overviewPolyline = route.getJSONObject("overview_polyline");
+                        String points = overviewPolyline.getString("points");
+
+                        // Decode the polyline points and draw the route on the map
+                        //List<LatLng> routePolyline = PolyUtil.decode(points);\
+                        List<LatLng> routePolyline = decodePolyline(points);
+
+                        runOnUiThread(() -> myMap.addPolyline(new PolylineOptions()
+                                .addAll(routePolyline)
+                                .color(0xFF0000FF) // Blue color
+                                .width(10)));
+                    }
+                } catch (Exception e) {
+                    Log.e("DirectionsAPI", "Error parsing JSON", e);
+                }
+            }
+        });
     }
 
     @Override
@@ -139,4 +202,39 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 //        final TextView textScore=findViewById(R.id.text_score);
 //        textScore.setText("50%");
     }
+
+    //Manual PolyLine Decoder because dependencies weren't working
+    public List<LatLng> decodePolyline(String encodedPath) {
+        List<LatLng> poly = new ArrayList<>();
+        int index = 0, len = encodedPath.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encodedPath.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encodedPath.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            poly.add(new LatLng(
+                    lat / 1E5,
+                    lng / 1E5
+            ));
+        }
+        return poly;
+    }
+
 }
