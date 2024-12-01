@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-30T20:06:00.696316300Z">
+        <DropdownSelection timestamp="2024-12-01T19:50:38.080279400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\lexie\.android\avd\LG_G8_Thinq_API_29.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=1A071FDF600DDX" />
             </handle>
           </Target>
         </DropdownSelection>

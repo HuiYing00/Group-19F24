@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/btn_drivinghist"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Map">
@@ -148,7 +148,40 @@
         app:layout_constraintEnd_toEndOf="@+id/img_maxempty"
         app:layout_constraintStart_toStartOf="@+id/img_maxempty" />
 
-        <fragment
+    <ImageView
+        android:id="@+id/img_yourempty"
+        android:layout_width="78dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"
+        app:layout_constraintStart_toEndOf="@+id/img_maxempty"
+        app:srcCompat="@drawable/img_yourspeed" />
+
+
+    <TextView
+        android:id="@+id/tv_yourSpeed"
+        android:layout_width="67dp"
+        android:layout_height="72dp"
+        android:autoSizeTextType="uniform"
+        android:text="50"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/img_yourempty"
+        app:layout_constraintEnd_toEndOf="@+id/img_yourempty"
+        app:layout_constraintStart_toStartOf="@+id/img_yourempty" />
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="106dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="20dp"
+        android:autoSizeTextType="uniform"
+        android:text="1000"
+        app:layout_constraintBottom_toTopOf="@+id/btn_end"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="406dp"
@@ -161,6 +194,14 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_menu"
         tools:layout="@layout/activity_map" />
 
+    <TextView
+        android:id="@+id/tv_drivetxt"
+        android:layout_width="129dp"
+        android:layout_height="23dp"
+        android:autoSizeTextType="uniform"
+        android:text="Current drive score:"
+        app:layout_constraintBottom_toTopOf="@+id/tv_score"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
