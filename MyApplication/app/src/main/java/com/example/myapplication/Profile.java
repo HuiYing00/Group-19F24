@@ -15,4 +15,14 @@ public class Profile extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    public void openCarInfo(View view){
+        Intent intent = new Intent(this, Car_Activity.class);
+        startActivity(intent);
+    }
+
+    public void openMap(View view){
+        Intent intent = new Intent(this, Map.class);
+        startActivity(intent);
+    }
 }
