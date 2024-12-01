@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.content.Intent;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -25,7 +26,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -49,19 +49,24 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     private final int PERM_FINE_LOCATION = 1;
     private final LatLng destinationLatLng = new LatLng(43.452969, -80.495064); // Replace with your destination
+    private final int BATCH_SIZE = 30;
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
-    //private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-
     private GoogleMap myMap;
+    private TextView tvSpeedLimit;
+    List<LatLng> decodedLatLng;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        tvSpeedLimit = findViewById(R.id.tv_maxSpeed);
+        decodedLatLng = new ArrayList<>();
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -134,6 +139,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void fetchRoute() {
+
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
                 currentLocation.getLatitude() + "," + currentLocation.getLongitude() +
                 "&destination=" + destinationLatLng.latitude + "," + destinationLatLng.longitude +
@@ -173,6 +179,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                         // Decode the polyline points and draw the route on the map
                         String polyline = route.getJSONObject("overview_polyline").getString("points");
                         List<LatLng> decodedPath = PolyUtil.decode(polyline);
+
+                        decodedLatLng = decodedPath;
+
                         Log.d("Polyline", "Encoded Polyline: " + polyline);
 
                         for (LatLng point : decodedPath) {
@@ -184,6 +193,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                                 .color(0xFF0000FF)
                                 .width(15)));
 
+                        fetchSpeedLimits(decodedLatLng);
                     }
                 } catch (Exception e) {
                     Log.e("DirectionsAPI", "Error parsing JSON", e);
@@ -191,6 +201,48 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
     }
+
+    private void fetchSpeedLimits(List<LatLng> routePoints) {
+        // Split route points into batches of 100
+        List<List<LatLng>> batches = batchRoutePoints(routePoints, BATCH_SIZE);
+
+        for (List<LatLng> batch : batches) {
+            StringBuilder pathParam = new StringBuilder();
+            for (LatLng point : batch) {
+                if (pathParam.length() > 0) pathParam.append("|");
+                pathParam.append(point.latitude).append(",").append(point.longitude);
+            }
+
+            String url = "https://roads.googleapis.com/v1/speedLimits?path=" + pathParam + "&key=AIzaSyChliqG4c6ZN4VvfpHGRe1n8HPEf-0-hlA"; // Replace with your API key
+
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e("RoadsAPI", "Request failed", e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        Log.e("RoadsAPI", "Request failed: " + response);
+                        return;
+                    }
+
+                    String responseData = response.body().string();
+
+                    runOnUiThread(() -> parseSpeedLimit(responseData)); // Parse and display speed limits
+                }
+            });
+        }
+    }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -212,6 +264,40 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     public void toHome(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void fetchSpeedLimitData(String jsonResponse) {
+        parseSpeedLimit(jsonResponse);
+    }
+
+    private void parseSpeedLimit(String jsonResponse) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            JSONArray speedLimits = jsonObject.getJSONArray("speedLimits");
+
+            for (int i = 0; i < speedLimits.length(); i++) {
+                JSONObject speedLimitInfo = speedLimits.getJSONObject(i);
+                int speedLimit = speedLimitInfo.getInt("speedLimit");
+                String units = speedLimitInfo.getString("units");
+
+                // Log speed limit
+                Log.d("SpeedLimitParser", "Speed Limit: " + speedLimit + " " + units);
+
+                // Show speed limit on the UI (optional: use a TextView or map overlay)
+                Toast.makeText(this, "Speed Limit: " + speedLimit + " " + units, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e("SpeedLimitParser", "Error parsing speed limit JSON", e);
+        }
+    }
+
+    private List<List<LatLng>> batchRoutePoints(List<LatLng> routePoints, int batchSize) {
+        List<List<LatLng>> batches = new ArrayList<>();
+        for (int i = 0; i < routePoints.size(); i += batchSize) {
+            int end = Math.min(routePoints.size(), i + batchSize);
+            batches.add(routePoints.subList(i, end));
+        }
+        return batches;
     }
 
     public void openProfile(View view){
