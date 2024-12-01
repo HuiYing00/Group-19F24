@@ -10,25 +10,32 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Set;
+
+import java.util.ArrayList;
+import java.util.List;
 import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class Car_Activity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter;
-
     private final int PERM_BLUETOOTH = 1;
     private final int PRQ_BLUETOOTH= 2;
 
-
+    private RecyclerView recyclerView;
+    private VehicleAdapter vehicleAdapter;
+    private List<Vehicle> vehicleList;
+    private HandlerThread handlerThread;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,39 @@ public class Car_Activity extends AppCompatActivity {
             return;
         }
 
-        enableBluetooth();
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        vehicleList = loadVehicleData(); // Load vehicle data
+        vehicleAdapter = new VehicleAdapter(vehicleList, this::connectToVehicle);
+        recyclerView.setAdapter(vehicleAdapter);
+
+        // Create a background thread
+        handlerThread = new HandlerThread("BluetoothHandlerThread");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper());
+    }
+
+    private List<Vehicle> loadVehicleData() {
+        // Replace this with real data, e.g., from a database or API
+        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles.add(new Vehicle("Toyota", "Camry", 2020, "1HGCM82633A123456", "12345-67890"));
+        vehicles.add(new Vehicle("Honda", "Civic", 2021, "2HGEJ6679WH512345", "98765-43210"));
+        return vehicles;
+    }
+
+    private void connectToVehicle(Vehicle vehicle) {
+        if (!bluetoothAdapter.isEnabled()) {
+            Toast.makeText(this, "Enable Bluetooth to connect to the vehicle", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        else {
+            enableBluetooth();
+        }
+        // Handle the Bluetooth connection logic here
+        Log.d("BluetoothConnection", "Connecting to vehicle: " + vehicle.getMake() + " " + vehicle.getModel());
+        Toast.makeText(this, "Connecting to " + vehicle.getMake() + " " + vehicle.getModel(), Toast.LENGTH_SHORT).show();
     }
 
     private void enableBluetooth() {
@@ -84,7 +123,21 @@ public class Car_Activity extends AppCompatActivity {
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (device != null) {
-                    Log.d("BluetoothDevice", "Found device: " + device.getName() + " [" + device.getAddress() + "]");
+                    // Offload processing to the background thread
+                    handler.post(() -> {
+                        String deviceName = (device.getName() != null) ? device.getName() : "Unknown Device";
+                        String deviceInfo = "Found device: " + deviceName + " [" + device.getAddress() + "]";
+
+                        // Log device info
+                        Log.d("BluetoothDevice", deviceInfo);
+
+                        // Optionally update UI on the main thread
+                        runOnUiThread(() -> {
+                            // Update UI components here
+                        });
+                    });
+
+                    //Log.d("BluetoothDevice", "Found device: " + device.getName() + " [" + device.getAddress() + "]");
                 }
             }
         }
@@ -172,6 +225,9 @@ public class Car_Activity extends AppCompatActivity {
         super.onDestroy();
         if (receiver != null) {
             unregisterReceiver(receiver);
+        }
+        if (handlerThread != null) {
+            handlerThread.quit();
         }
     }
 

@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <!-- Text Fields Section -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Make -->
+        <TextView
+            android:id="@+id/tv_make"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Make: "
+            android:textSize="14sp" />
+
+        <!-- Model -->
+        <TextView
+            android:id="@+id/tv_model"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Model: "
+            android:textSize="14sp" />
+
+        <!-- Year -->
+        <TextView
+            android:id="@+id/tv_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Year: "
+            android:textSize="14sp" />
+
+        <!-- VIN -->
+        <TextView
+            android:id="@+id/tv_vin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VIN: "
+            android:textSize="14sp" />
+
+        <!-- Policy Number -->
+        <TextView
+            android:id="@+id/tv_policy_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Policy: "
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_btaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address: " />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_bluetooth"
+        android:layout_width="93dp"
+        android:layout_height="95dp"
+        android:layout_gravity="center"
+        android:backgroundTint="#00FFFFFF"
+        android:contentDescription="Connect"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btn_bluetooth"
+        app:tint="#9D9DA4" />
+
+</LinearLayout>
