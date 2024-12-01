@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="Database.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1601"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="0" parent="0"/><expanded_item id="1" parent="0"/><expanded_item id="2" parent="0"/><expanded_item id="3" parent="0"/><expanded_item id="4" parent="0"/><expanded_item id="5" parent="0"/><expanded_item id="6" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="authenticate" custom_title="0" dock_id="1" table="4,12:mainauthenticate"/><dock_state state="000000ff00000000fd0000000100000002000001f900000388fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000001f90000011e00ffffff000001f90000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="authenticate" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="65"/><column index="2" value="62"/><column index="3" value="35"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 4, '2024-11-24', 2.49, 934);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 4, '2024-11-23', 35.64, 726);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 4, '2024-11-23', 21.59, 761);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 4, '2024-11-23', 21.55, 837);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 4, '2024-11-27', 5.89, 762);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 4, '2024-11-25', 27.97, 994);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 4, '2024-11-23', 21.27, 975);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 4, '2024-11-25', 80.28, 898);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 4, '2024-11-26', 4.03, 984);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 5, '2024-11-25', 4.58, 927);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 5, '2024-11-26', 8.32, 681);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 5, '2024-11-25', 19.98, 673);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 5, '2024-11-27', 69.26, 780);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 5, '2024-11-24', 18.71, 977);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 5, '2024-11-25', 19.87, 971);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 5, '2024-11-27', 4.76, 770);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 6, '2024-11-21', 24.69, 616);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 6, '2024-11-21', 12.82, 683);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FT0RPTA8CSUYFHZ5T', 6, '2024-11-21', 6.66, 746);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 6, '2024-11-22', 25.37, 684);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BZTQTXKL3OUJ6B8OQ', 6, '2024-11-27', 20.22, 988);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 7, '2024-11-26', 28.36, 861);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 7, '2024-11-25', 17.52, 860);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 7, '2024-11-23', 20.09, 941);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 7, '2024-11-24', 72.06, 925);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 7, '2024-11-24', 12.85, 686);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 7, '2024-11-25', 20.55, 714);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 7, '2024-11-21', 12.04, 999);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 7, '2024-11-23', 21.12, 641);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 7, '2024-11-25', 25.4, 614);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-23', 20.96, 891);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-25', 5.19, 629);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-24', 70.01, 701);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-27', 13.69, 796);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-25', 34.31, 660);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 8, '2024-11-21', 2.63, 963);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-27', 13.14, 749);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 8, '2024-11-21', 28.85, 621);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 9, '2024-11-27', 20.67, 684);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 9, '2024-11-26', 17.46, 893);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 9, '2024-11-26', 24.15, 885);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 9, '2024-11-27', 26.1, 687);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 9, '2024-11-21', 43.5, 862);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 9, '2024-11-27', 9.54, 980);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 9, '2024-11-23', 15.08, 617);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 9, '2024-11-23', 24.06, 881);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('OTKKHKR0NYYFO2BJ6', 9, '2024-11-22', 16.17, 931);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('FAMIL1PKJH5Q1FL1D', 9, '2024-11-21', 6.86, 645);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-26', 19.39, 815);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-24', 17.74, 894);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-21', 14.47, 886);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-27', 23.07, 738);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-23', 16.42, 735);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-21', 12.1, 689);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-22', 19.71, 924);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-25', 22.12, 803);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-22', 9.47, 663);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('Z097Q80MFLI1LM2FN', 10, '2024-11-24', 7.45, 676);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-22', 5.56, 652);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-27', 8.92, 782);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-26', 13.26, 750);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-24', 13.35, 758);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-26', 16.82, 812);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-24', 28.78, 917);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-23', 11.52, 666);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-21', 15.1, 882);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-25', 22.83, 969);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MCIWPGLXXW7ONOB53', 11, '2024-11-23', 58.95, 999);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-27', 41.41, 645);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-27', 7.38, 948);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-24', 28.53, 895);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-22', 10.18, 725);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-27', 5.68, 934);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-26', 18.99, 622);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-26', 16.88, 926);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('1MMRIXZJSVWXUXWHL', 12, '2024-11-24', 6.77, 655);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MM2RCGYPQVNQUHNCC', 13, '2024-11-27', 5.13, 830);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MM2RCGYPQVNQUHNCC', 13, '2024-11-24', 28.16, 976);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MM2RCGYPQVNQUHNCC', 13, '2024-11-24', 4.99, 811);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MM2RCGYPQVNQUHNCC', 13, '2024-11-27', 24.54, 799);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('MM2RCGYPQVNQUHNCC', 13, '2024-11-26', 3.43, 960);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-21', 29.87, 627);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-24', 14.01, 645);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-22', 7.84, 783);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-21', 50.56, 879);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-23', 14.75, 926);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-24', 68.86, 856);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-21', 26.57, 600);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('K09K9FZVG4P8HFIEP', 14, '2024-11-27', 26.37, 693);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BG9D9XADLTNXZ0TEE', 15, '2024-11-27', 10.03, 896);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BG9D9XADLTNXZ0TEE', 15, '2024-11-23', 22.1, 783);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BG9D9XADLTNXZ0TEE', 15, '2024-11-23', 28.16, 944);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BG9D9XADLTNXZ0TEE', 15, '2024-11-22', 16.71, 680);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BG9D9XADLTNXZ0TEE', 15, '2024-11-21', 28.81, 847);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('BG9D9XADLTNXZ0TEE', 15, '2024-11-27', 22.83, 968);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-21', 2.07, 934);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-21', 89.44, 911);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-26', 2.45, 938);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-26', 23.54, 797);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-21', 14.91, 748);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-23', 17.25, 699);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-25', 18.77, 793);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-27', 20.13, 737);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('04QX004WSSSFGMGFE', 1, '2024-11-26', 14.94, 771);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 2, '2024-11-26', 8.15, 716);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 2, '2024-11-22', 16.07, 835);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 2, '2024-11-27', 18.15, 660);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 2, '2024-11-26', 20.47, 726);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 2, '2024-11-25', 10.64, 604);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 2, '2024-11-25', 22.11, 781);
+
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-27', 24.45, 681);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-27', 11.88, 704);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-26', 21.08, 813);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-27', 8.4, 700);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-25', 27.21, 880);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-22', 21.93, 966);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-24', 89.17, 698);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-25', 23.07, 955);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-26', 14.87, 867);
+INSERT INTO drive (vin, cid, dod, duration, score) VALUES ('KJ2MI8LYJN6PHGBMK', 3, '2024-11-23', 20.23, 885);</sql><current_tab id="0"/></tab_sql></sqlb_project>
