@@ -63,11 +63,12 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="#00FFFFFF"
         android:contentDescription="NULL"
+        android:onClick="openCarInfo"
         android:scaleType="fitCenter"
         android:src="@drawable/btn_menu"
-        app:tint="#00BCD4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="#00BCD4"
         tools:src="@drawable/btn_menu" />
 
     <ImageButton

@@ -182,13 +182,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                         runOnUiThread(() -> myMap.addPolyline(new PolylineOptions()
                                 .addAll(decodedPath)
                                 .color(0xFF0000FF)
-                                .width(10)));
-
-//                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//                        for (LatLng point : decodedPath) {
-//                            builder.include(point);
-//                        }
-//                        myMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+                                .width(15)));
 
                     }
                 } catch (Exception e) {
@@ -229,6 +223,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 //        Intent intent = new Intent(this, Map.class);
 //        startActivity(intent);
 //    }
+
+    public void openCarInfo(View view){
+        Intent intent = new Intent(this, Car_Activity.class);
+        startActivity(intent);
+    }
 
     public void startTrip(View view){
         // Logic to get data here
