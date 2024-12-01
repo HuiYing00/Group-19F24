@@ -6,6 +6,7 @@ public class Vehicle {
     private int year;
     private String vin;
     private String policyNumber;
+    private String btaddress;
 
     // Constructor
     public Vehicle(String make, String model, int year, String vin, String policyNumber) {
@@ -14,6 +15,7 @@ public class Vehicle {
         this.year = year;
         this.vin = vin;
         this.policyNumber = policyNumber;
+        this.btaddress = "";
     }
 
     // Getters
@@ -33,7 +35,8 @@ public class Vehicle {
         return vin;
     }
 
-    public String getPolicyNumber() {
-        return policyNumber;
-    }
+    public String getPolicyNumber() { return policyNumber; }
+
+    public String getBluetoothAddress() { return btaddress; }
+    public void setBluetoothAddress(String adr) { this.btaddress = adr; }
 }

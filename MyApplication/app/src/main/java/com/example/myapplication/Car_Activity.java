@@ -30,18 +30,22 @@ public class Car_Activity extends AppCompatActivity {
     private BluetoothAdapter bluetoothAdapter;
     private final int PERM_BLUETOOTH = 1;
     private final int PRQ_BLUETOOTH= 2;
-
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewDevices;
+    private RecyclerView recyclerViewCars;
     private VehicleAdapter vehicleAdapter;
+    private DeviceAdapter deviceAdapter;
     private List<Vehicle> vehicleList;
+    private List<BluetoothDevice> deviceList;
     private HandlerThread handlerThread;
     private Handler handler;
+    private String macAddress;
+    private Vehicle vTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car);
-
+        macAddress = "";
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
@@ -49,12 +53,28 @@ public class Car_Activity extends AppCompatActivity {
             return;
         }
 
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCars = findViewById(R.id.recycler_viewcars);
+        recyclerViewDevices = findViewById(R.id.recycler_viewdevices);
+
+        recyclerViewCars.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDevices.setLayoutManager(new LinearLayoutManager(this));
 
         vehicleList = loadVehicleData(); // Load vehicle data
-        vehicleAdapter = new VehicleAdapter(vehicleList, this::connectToVehicle);
-        recyclerView.setAdapter(vehicleAdapter);
+        deviceList = new ArrayList<>();
+
+        //listen for a click to pair
+        deviceAdapter = new DeviceAdapter(this, deviceList, device ->
+        {
+            checkBluetoothPermissions();
+            pairDevice(device); //call the pair device function
+        });
+
+        vehicleAdapter = new VehicleAdapter(vehicleList, vehicle -> {
+            connectToVehicle(vehicle);
+        });
+
+        recyclerViewCars.setAdapter(vehicleAdapter);
+        recyclerViewDevices.setAdapter(deviceAdapter);
 
         // Create a background thread
         handlerThread = new HandlerThread("BluetoothHandlerThread");
@@ -71,20 +91,24 @@ public class Car_Activity extends AppCompatActivity {
     }
 
     private void connectToVehicle(Vehicle vehicle) {
+
         if (!bluetoothAdapter.isEnabled()) {
             Toast.makeText(this, "Enable Bluetooth to connect to the vehicle", Toast.LENGTH_SHORT).show();
             return;
         }
 
         else {
+            vTemp = vehicle;
             enableBluetooth();
         }
+
         // Handle the Bluetooth connection logic here
         Log.d("BluetoothConnection", "Connecting to vehicle: " + vehicle.getMake() + " " + vehicle.getModel());
         Toast.makeText(this, "Connecting to " + vehicle.getMake() + " " + vehicle.getModel(), Toast.LENGTH_SHORT).show();
     }
 
     private void enableBluetooth() {
+
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
@@ -122,26 +146,41 @@ public class Car_Activity extends AppCompatActivity {
                 }
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                //if (device != null && !deviceList.contains(device)) {
                 if (device != null) {
-                    // Offload processing to the background thread
+                        // Offload processing to the background thread
                     handler.post(() -> {
-                        String deviceName = (device.getName() != null) ? device.getName() : "Unknown Device";
-                        String deviceInfo = "Found device: " + deviceName + " [" + device.getAddress() + "]";
-
-                        // Log device info
-                        Log.d("BluetoothDevice", deviceInfo);
-
-                        // Optionally update UI on the main thread
-                        runOnUiThread(() -> {
-                            // Update UI components here
-                        });
+                        deviceList.add(device);
+                        //update UI
+                        runOnUiThread(() -> deviceAdapter.notifyItemInserted(deviceList.size()-1));
                     });
-
-                    //Log.d("BluetoothDevice", "Found device: " + device.getName() + " [" + device.getAddress() + "]");
+                        //Log.d("BluetoothDevice", "Found device: " + device.getName() + " [" + device.getAddress() + "]");
                 }
+
+                    else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                        Toast.makeText(context, "Discovery finished", Toast.LENGTH_SHORT).show();
+                    }
+                //}
             }
         }
     };
+
+    private void pairDevice(BluetoothDevice device) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 1);
+            return;
+        }
+
+        device.createBond();
+        recyclerViewDevices.setVisibility(View.INVISIBLE);
+        macAddress = device.getAddress();
+        Toast.makeText(this, "Pairing with " + device.getName(), Toast.LENGTH_SHORT).show();
+        updateMacAddress();
+        deviceList.clear();
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -181,6 +220,7 @@ public class Car_Activity extends AppCompatActivity {
             bluetoothAdapter.cancelDiscovery();
         }
 
+        recyclerViewDevices.setVisibility(View.VISIBLE);
         // Start discovery and register the receiver
         bluetoothAdapter.startDiscovery();
 
@@ -204,7 +244,14 @@ public class Car_Activity extends AppCompatActivity {
                         PRQ_BLUETOOTH
                 );
             } else {
-                startDeviceDiscovery(); // Permissions are already granted
+
+                if (bluetoothAdapter.isDiscovering()) {
+                    bluetoothAdapter.cancelDiscovery();
+                }
+                else
+                {
+                    startDeviceDiscovery(); // Permissions are already granted
+                }
             }
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             // Pre-Android 12 requires location permission for Bluetooth scanning
@@ -214,11 +261,31 @@ public class Car_Activity extends AppCompatActivity {
                         PRQ_BLUETOOTH
                 );
             } else {
-                startDeviceDiscovery(); // Permissions are already granted
+                if (bluetoothAdapter.isDiscovering()) {
+                    bluetoothAdapter.cancelDiscovery();
+                }
+                else
+                {
+                    startDeviceDiscovery(); // Permissions are already granted
+                }
             }
         }
     }
 
+    private void updateMacAddress()
+    {
+        String vin = vTemp.getVin();
+
+        for (Vehicle vehicle : vehicleList)
+        {
+            if (vehicle.getVin().equals(vin)) {
+                vehicle.setBluetoothAddress(macAddress);
+                break;
+            }
+        }
+
+        vehicleAdapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onDestroy() {
@@ -227,6 +294,7 @@ public class Car_Activity extends AppCompatActivity {
             unregisterReceiver(receiver);
         }
         if (handlerThread != null) {
+
             handlerThread.quit();
         }
     }

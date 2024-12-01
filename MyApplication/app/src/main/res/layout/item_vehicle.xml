@@ -46,7 +46,7 @@
 
         <!-- Policy Number -->
         <TextView
-            android:id="@+id/tv_policy_number"
+            android:id="@+id/tv_policynum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Policy: "

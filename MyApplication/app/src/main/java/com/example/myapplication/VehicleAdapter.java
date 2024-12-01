@@ -46,6 +46,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.yearTextView.setText("Year: " + vehicle.getYear());
         holder.vinTextView.setText("VIN: " + vehicle.getVin());
         holder.policyTextView.setText("Policy: " + vehicle.getPolicyNumber());
+        holder.btAddressTextView.setText("Address: " + vehicle.getBluetoothAddress());
 
         // Handle button click for connecting to the vehicle
         holder.connectButton.setOnClickListener(v -> connectClickListener.onConnectClick(vehicle));
@@ -58,7 +59,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     // ViewHolder for the layout
     static class VehicleViewHolder extends RecyclerView.ViewHolder {
-        TextView makeTextView, modelTextView, yearTextView, vinTextView, policyTextView;
+        TextView makeTextView, modelTextView, yearTextView, vinTextView, policyTextView, btAddressTextView;
         ImageButton connectButton;
 
         public VehicleViewHolder(@NonNull View itemView) {
@@ -67,7 +68,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             modelTextView = itemView.findViewById(R.id.tv_model);
             yearTextView = itemView.findViewById(R.id.tv_year);
             vinTextView = itemView.findViewById(R.id.tv_vin);
-            policyTextView = itemView.findViewById(R.id.tv_policy_number);
+            policyTextView = itemView.findViewById(R.id.tv_policynum);
+            btAddressTextView = itemView.findViewById(R.id.tv_btaddress);
             connectButton = itemView.findViewById(R.id.btn_bluetooth);
         }
     }
