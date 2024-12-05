@@ -65,7 +65,7 @@ username char(30) not null,
 password char(50) not null,
 cid int not null,
 primary key (username),
-foreign key cid references person(cid),
+foreign key (cid) references person(cid),
 constraint unique_user unique authenticate(username));
 
 -- ************************************** INSERT POLICY ************************************************

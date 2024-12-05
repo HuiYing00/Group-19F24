@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/btn_drivinghist"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Map">
@@ -28,12 +28,14 @@
         android:layout_width="108dp"
         android:layout_height="90dp"
         android:layout_marginStart="148dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginBottom="4dp"
         android:backgroundTint="#00FFFFFF"
         android:contentDescription="NULL"
         android:scaleType="fitCenter"
         android:src="@drawable/btn_drive"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_card"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="#00BCD4"
         tools:src="@drawable/btn_drive" />
@@ -61,11 +63,12 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="#00FFFFFF"
         android:contentDescription="NULL"
+        android:onClick="openCarInfo"
         android:scaleType="fitCenter"
         android:src="@drawable/btn_menu"
-        app:tint="#00BCD4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="#00BCD4"
         tools:src="@drawable/btn_menu" />
 
     <ImageButton
@@ -97,27 +100,107 @@
         app:layout_constraintVertical_bias="0.025" />
 
     <Button
-        android:id="@+id/button_id_start"
+        android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="startTrip"
         android:text="START TRIP"
         android:textSize="16dp"
-        android:onClick="startTrip"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_home"
+        app:layout_constraintEnd_toStartOf="@+id/btn_end"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_id_end"
+        android:id="@+id/btn_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="endTrip"
         android:text="END TRIP"
         android:textSize="16dp"
-        android:onClick="endTrip"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_start" />
+
+    <ImageView
+        android:id="@+id/img_maxempty"
+        android:layout_width="78dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/img_maxspeed" />
+
+    <TextView
+        android:id="@+id/tv_maxSpeed"
+        android:layout_width="67dp"
+        android:layout_height="72dp"
+        android:autoSizeTextType="uniform"
+        android:text="50"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/img_maxempty"
+        app:layout_constraintEnd_toEndOf="@+id/img_maxempty"
+        app:layout_constraintStart_toStartOf="@+id/img_maxempty" />
+
+    <ImageView
+        android:id="@+id/img_yourempty"
+        android:layout_width="78dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"
+        app:layout_constraintStart_toEndOf="@+id/img_maxempty"
+        app:srcCompat="@drawable/img_yourspeed" />
+
+
+    <TextView
+        android:id="@+id/tv_yourSpeed"
+        android:layout_width="67dp"
+        android:layout_height="72dp"
+        android:autoSizeTextType="uniform"
+        android:text="50"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/img_yourempty"
+        app:layout_constraintEnd_toEndOf="@+id/img_yourempty"
+        app:layout_constraintStart_toStartOf="@+id/img_yourempty" />
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="106dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="20dp"
+        android:autoSizeTextType="uniform"
+        android:text="1000"
+        app:layout_constraintBottom_toTopOf="@+id/btn_end"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="406dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/img_maxempty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_menu"
+        tools:layout="@layout/activity_map" />
+
+    <TextView
+        android:id="@+id/tv_drivetxt"
+        android:layout_width="129dp"
+        android:layout_height="23dp"
+        android:autoSizeTextType="uniform"
+        android:text="Current drive score:"
+        app:layout_constraintBottom_toTopOf="@+id/tv_score"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

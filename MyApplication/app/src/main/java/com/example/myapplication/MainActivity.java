@@ -3,14 +3,15 @@ package com.example.myapplication;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
     ImageButton btnProfile;
     ImageButton btnMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
                 openMap(v);
             }
         });
+
+
     }
 
     public void openProfile(View view){
@@ -41,4 +44,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openCarInfo(View view){
+        Intent intent = new Intent(this, Car_Activity.class);
+        startActivity(intent);
+    }
 }

@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Insurance App</string>
+
+    <string name="MAPS_API_KEY">AIzaSyB5t4ORxFaB0vKZ4GTTh570Y8m5KBqPfKE</string>
 </resources>
