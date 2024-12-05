@@ -1,6 +1,16 @@
 package com.example.myapplication;
 
 import android.Manifest;
+
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
@@ -14,13 +24,18 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.os.CountDownTimer;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +49,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.PolyUtil;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,7 +75,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
     private final int PERM_FINE_LOCATION = 1;
     private final LatLng destinationLatLng = new LatLng(43.452969, -80.495064); // Replace with your destination
     private final int BATCH_SIZE = 30;
-    private final int DEFAULT_SPEED = 50;
+    private final int DEFAULT_SPEED = 30;
 
     private static final float HARD_STOP_ACCEL_THRESHOLD = -10.0f;
     private static final float GYRO_ROTATION_THRESHOLD = 10.0f;
@@ -73,10 +90,15 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
     private final int PEN_MED = 50;
     private final int PEN_HI = 100;
 
-    private final int START_SCORE = 1000;
+    private final int ICON_SIZE = 150;
 
-    private final int INTERVAL = 10000;
+    private final int START_SCORE = 1000;
+    private final int PERSON_SPEED = 10;
+    private final int INTERVAL = 1000;
     private int score = START_SCORE;
+    private static final long COUNTDOWN_TIMER = 10000; // 10 seconds
+    private final String mac = "20:19:10:86:3D:F1";
+    private CountDownTimer countDownTimer;
 
     Location currentLocation;
     private Location previousLocation = null;
@@ -90,6 +112,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
     private TextView tvyourScore;
     List<LatLng> decodedLatLng;
     private boolean roads = true;
+    private boolean optOut = false;
+    private boolean collectData = false;
+    private Marker marker;
     private String currentMac;
     private String storedMac;
     private SensorManager sensorManager;
@@ -104,6 +129,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
         tvSpeedLimit = findViewById(R.id.tv_maxSpeed);
         tvyourSpeed = findViewById(R.id.tv_yourSpeed);
         tvyourScore = findViewById(R.id.tv_score);
+
+        speedLimit = DEFAULT_SPEED;
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager != null) {
@@ -132,15 +159,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
                 // Update user location dynamically
                 Location location = locationResult.getLastLocation();
                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                if (currentLocation != null)
+                if (location != null)
                 {
-                    calculateSpeed(currentLocation);
+                    calculateSpeed(location);
+                    updateLocationMarker(currentLatLng);
                 }
-                //myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 19));
             }
         };
         getLastLocation();
         startLocationUpdates();
+
+        checkBluetoothDevices();
     }
 
     private void startLocationUpdates() {
@@ -183,16 +212,16 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
                     mapFragment.getMapAsync(Map.this);
                 }
             }
-
         });
     }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         myMap = googleMap;
-        LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        myMap.addMarker(new MarkerOptions().position(myLoc).title(""));
-        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 19));
-        //fetchRoute();
+        createLocationMarker();
+        if (collectData)
+        {
+            startTrip();
+        }
     }
 
     private void calculateSpeed(Location currentLocation) {
@@ -200,39 +229,32 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
 
         if (previousTimestamp > 0) {
             long timeDiff = currentTimestamp - previousTimestamp; // Time difference in milliseconds
-            Log.d("Time", "DeltaTime: " + timeDiff + " ms");
+            //Log.d("Time", "DeltaTime: " + timeDiff + " ms");
 
             if (timeDiff > 0) {
                 float distance = previousLocation.distanceTo(currentLocation); // Distance in meters
-
+                //Log.d("Speed", "Km/hr " + distance + " km/h");
                 // Speed in meters per second (m/s)
                 float speed = distance / (timeDiff / 1000.0f); // Convert milliseconds to seconds
 
                 // Convert to kilometers per hour (km/h)
                 float speedKmh = speed * 3.6f;
-
+//                Log.d("Speed", "Km/hr " + speedKmh + " km/h");
                 tvyourSpeed.setText(String.valueOf((int)speedKmh));
                 formatSpeedTextViews(speedKmh);
+
+                if (speedKmh > PERSON_SPEED && !collectData)
+                {
+                    showDrivingPopup(this);
+                }
             }
         }
 
         // Update the previous location and timestamp
         previousLocation = currentLocation;
         previousTimestamp = currentTimestamp;
+
     }
-
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        // Check Bluetooth connection and auto-collect driving data
-//        if (isBluetoothDeviceConnected()) {
-//            if (autoCollectDrivingData()) {
-//                startTrip(null); // Start the trip if conditions are met
-//            }
-//        }
-//    }
 
     private void detectHardStop(float zAxisAcceleration, float[] rotationRates) {
 
@@ -261,55 +283,42 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
         lastEventTimestamp = currentTimestamp;
     }
 
-    private boolean isBluetoothDeviceConnected() {
+    private void checkBluetoothDevices() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-            return false; // Bluetooth is not supported or enabled
+            Log.d("BluetoothCheck", "Bluetooth is not supported or not enabled.");
+            return;
         }
 
-        // Check connected devices
-        try {
-            // Get connected devices for the Bluetooth A2DP profile (example)
-            boolean connectedDevices = bluetoothAdapter.getProfileProxy(
-                    this, new BluetoothProfile.ServiceListener() {
+        // Connect to A2DP profile to get connected devices
+        bluetoothAdapter.getProfileProxy(this, new BluetoothProfile.ServiceListener() {
+            @Override
+            public void onServiceConnected(int profile, BluetoothProfile proxy) {
+                if (profile == BluetoothProfile.A2DP) {
+                    // Get the list of connected devices
+                    List<BluetoothDevice> connectedDevices = proxy.getConnectedDevices();
 
-                        @Override
-                        public void onServiceConnected(int profile, BluetoothProfile proxy) {
-                            List<BluetoothDevice> devices = proxy.getConnectedDevices();
-
-                            if(devices.size() > 1 || devices.isEmpty())
-                            {
-                                Log.e("Error", "More/No than one device connected!");
-                            }
-                            else {
-                                for (BluetoothDevice device : devices) {
-                                    currentMac = device.getAddress();
-                                }
-                            }
-
+                    if (connectedDevices.isEmpty()) {
+                        Log.d("BluetoothCheck", "No devices are connected.");
+                    } else {
+                        for (BluetoothDevice device : connectedDevices) {
+                            currentMac = device.getAddress();
+                            Log.d("BluetoothCheck", "Connected device: " + currentMac);
                         }
+                        if (mac.equals(currentMac))
+                            collectData = true;
+                    }
 
-                        @Override
-                        public void onServiceDisconnected(int profile) {
-                            Log.d("BluetoothCheck", "Profile disconnected.");
-                        }
-                    }, BluetoothProfile.A2DP); // Use A2DP, GATT, or other profiles
+                    // Release the profile proxy when done
+                    BluetoothAdapter.getDefaultAdapter().closeProfileProxy(BluetoothProfile.A2DP, proxy);
+                }
+            }
 
-            return !connectedDevices;
-
-        } catch (Exception e) {
-            Log.e("BluetoothCheck", "Error checking connected devices", e);
-            return false;
-        }
-    }
-
-    private boolean autoCollectDrivingData() {
-        boolean match = false;
-
-        if (getSavedMacAddress().equals(currentMac))
-            match = true;
-
-        return match;
+            @Override
+            public void onServiceDisconnected(int profile) {
+                Log.d("BluetoothCheck", "A2DP profile disconnected.");
+            }
+        }, BluetoothProfile.A2DP);
     }
 
     private String getSavedMacAddress() {
@@ -517,36 +526,154 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
         return batches;
     }
 
-    private void formatSpeedTextViews(float currentSpeed){
-        if (currentSpeed - speedLimit > SPEED_LOW)
-        {
-            //low penalty, speeding between 5-10 over speed limit
-            if (currentSpeed - speedLimit < SPEED_MED)
-            {
-                tvyourSpeed.setTextColor(getResources().getColor(R.color.alert, null));
-                score -= PEN_SMALL;
-                tvyourScore.setText(String.valueOf(score));
-            }
+    private void formatSpeedTextViews(float currentSpeed) {
+        int speedDiff = (int)(currentSpeed - speedLimit);
+        //Log.d("Speeding detection: ", "Current Speed: " + currentSpeed + ", Speed Limit: " + speedLimit);
 
-            if (currentSpeed - speedLimit > SPEED_MED)
+        if (collectData)
+        {
+            if (speedDiff > SPEED_LOW)
             {
-                if (currentSpeed - speedLimit < SPEED_HI)
+
+                //low penalty, speeding between 5-10 over speed limit
+                if (speedDiff < SPEED_MED)
                 {
                     tvyourSpeed.setTextColor(getResources().getColor(R.color.alert, null));
-                    score -= PEN_MED;
+                    score -= PEN_SMALL;
+                    tvyourScore.setText(String.valueOf(score));
+                }
+
+                if (speedDiff > SPEED_MED)
+                {
+                    if (speedDiff < SPEED_HI)
+                    {
+                        tvyourSpeed.setTextColor(getResources().getColor(R.color.alert, null));
+                        score -= PEN_MED;
+                        tvyourScore.setText(String.valueOf(score));
+                    }
+                }
+
+                if (speedDiff > SPEED_HI)
+                {
+                    tvyourSpeed.setTextColor(getResources().getColor(R.color.alert, null));
+                    score -= PEN_HI;
                     tvyourScore.setText(String.valueOf(score));
                 }
             }
-
-            if (currentSpeed - speedLimit > SPEED_HI)
-            {
-                tvyourSpeed.setTextColor(getResources().getColor(R.color.alert, null));
-                score -= PEN_HI;
-                tvyourScore.setText(String.valueOf(score));
+            else {
+                tvyourSpeed.setTextColor(getResources().getColor(R.color.black, null));
             }
         }
-        else {
-            tvyourSpeed.setTextColor(getResources().getColor(R.color.black, null));
+
+    }
+
+    private  void createLocationMarker() {
+        LatLng myLoc = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+        // Step 1: Get Bitmap from Vector
+        Bitmap originalBitmap = getBitmapFromVector(getApplicationContext(), R.drawable.img_location);
+
+        // Step 2: Resize the Bitmap
+        Bitmap resizedBitmap = resizeBitmap(originalBitmap, ICON_SIZE, ICON_SIZE); // Adjust width & height as needed
+
+        // Step 3: Create a BitmapDescriptor
+        BitmapDescriptor customIcon = BitmapDescriptorFactory.fromBitmap(resizedBitmap);
+        MarkerOptions markerOptions = new MarkerOptions().position(myLoc).title("").icon(customIcon);
+
+        marker = myMap.addMarker(markerOptions);
+    }
+
+    private void updateLocationMarker(LatLng myLoc) {
+
+        if (marker == null) {
+
+            Bitmap originalBitmap = getBitmapFromVector(getApplicationContext(), R.drawable.img_location);
+
+            // Step 2: Resize the Bitmap
+            Bitmap resizedBitmap = resizeBitmap(originalBitmap, ICON_SIZE, ICON_SIZE); // Adjust width & height as needed
+
+            // Step 3: Create a BitmapDescriptor
+            BitmapDescriptor customIcon = BitmapDescriptorFactory.fromBitmap(resizedBitmap);
+            MarkerOptions markerOptions = new MarkerOptions().position(myLoc).title("").icon(customIcon);
+
+            marker = myMap.addMarker(markerOptions);
+
+        } else {
+            // Update the position of the existing marker
+            marker.setPosition(myLoc);
+        }
+
+        //animateStretchAndSquash(getApplicationContext(), marker, R.drawable.img_location, true);
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLoc, 18));
+    }
+
+    public static Bitmap getBitmapFromVector(Context context, int drawableId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, drawableId);
+        if (vectorDrawable == null) {
+            throw new IllegalArgumentException("Drawable not found");
+        }
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return bitmap;
+    }
+
+    public Bitmap resizeBitmap(Bitmap bitmap, int width, int height) {
+        return Bitmap.createScaledBitmap(bitmap, width, height, false);
+    }
+
+    private void showDrivingPopup(Context context) {
+
+        if (!optOut)
+        {
+            // Inflate the popup layout
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View popupView = inflater.inflate(R.layout.opt_out, null);
+
+            // Initialize the AlertDialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setView(popupView);
+            builder.setCancelable(false);
+
+            // Get references to UI elements
+            TextView timerText = popupView.findViewById(R.id.timer_text);
+            Button yesButton = popupView.findViewById(R.id.yes_button);
+            Button noButton = popupView.findViewById(R.id.no_button);
+
+            // Create the AlertDialog
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+            // Start the timer
+            countDownTimer = new CountDownTimer(COUNTDOWN_TIMER, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timerText.setText(millisUntilFinished / 1000 + " seconds left");
+                }
+
+                @Override
+                public void onFinish() {
+                    // Automatically trigger "Drive Mode" if the user doesn't press No
+                    startTrip();
+                    alertDialog.dismiss();
+                }
+            }.start();
+
+            // Yes button: Immediately trigger "Drive Mode"
+            yesButton.setOnClickListener(v -> {
+                startTrip(v);
+                countDownTimer.cancel();
+                alertDialog.dismiss();
+            });
+
+            // No button: Cancel the action
+            noButton.setOnClickListener(v -> {
+                optOut = true;
+                endTrip(v);
+                countDownTimer.cancel();
+                alertDialog.dismiss();
+            });
         }
     }
 
@@ -567,31 +694,23 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, Sensor
         startActivity(intent);
     }
 
-//    public void openMap(View view){
-//        Intent intent = new Intent(this, Map.class);
-//        startActivity(intent);
-//    }
-
     public void openCarInfo(View view){
         Intent intent = new Intent(this, Car_Activity.class);
         startActivity(intent);
     }
 
     public void startTrip(View view){
-        // Logic to get data here
-//        final TextView textTitle=findViewById(R.id.text_title);
-//        textTitle.setText("The trip has started!");
-//        final TextView textScore=findViewById(R.id.text_score);
-//        textScore.setText("Loading...");
+        collectData = true;
+        fetchRoute();
+    }
+
+    public void startTrip(){
+        collectData = true;
         fetchRoute();
     }
     public void endTrip(View view){
-        // logic to calculate and display score here
-//        final TextView textTitle=findViewById(R.id.text_title);
-//        textTitle.setText("Insurance Application");
-//        final TextView textScore=findViewById(R.id.text_score);
-//        textScore.setText("50%");
+        collectData = false;
         myMap.clear();
+        createLocationMarker();
     }
-
 }
