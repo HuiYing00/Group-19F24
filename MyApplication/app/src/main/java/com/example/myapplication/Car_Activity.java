@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -280,6 +280,8 @@ public class Car_Activity extends AppCompatActivity {
         {
             if (vehicle.getVin().equals(vin)) {
                 vehicle.setBluetoothAddress(macAddress);
+                //save the mac address for reference
+                //saveMacAddress(macAddress);
                 break;
             }
         }
@@ -297,6 +299,14 @@ public class Car_Activity extends AppCompatActivity {
 
             handlerThread.quit();
         }
+    }
+
+    private void saveMacAddress(String macAddress) {
+        SharedPreferences sharedPreferences = getSharedPreferences("DrivingAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("paired_device_mac", macAddress);
+        editor.apply();
+        Toast.makeText(this, "Device saved: " + macAddress, Toast.LENGTH_SHORT).show();
     }
 
     public void openProfile(View view){
