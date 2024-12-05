@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,107 +8,53 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/btn_home"
-        android:layout_width="108dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="4dp"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="NULL"
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_home"
-        app:tint="#00BCD4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:src="@drawable/btn_home" />
-
-    <ImageButton
-        android:id="@+id/btn_drive"
-        android:layout_width="108dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="148dp"
-        android:layout_marginBottom="4dp"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="NULL"
-        android:onClick="openMap"
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_drive"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="#00BCD4"
-        tools:src="@drawable/btn_drive" />
-
-    <ImageButton
-        android:id="@+id/btn_card"
-        android:layout_width="108dp"
-        android:layout_height="90dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginBottom="4dp"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="NULL"
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_insurance"
-        app:tint="#00BCD4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:src="@drawable/btn_insurance" />
-
-    <ImageButton
-        android:id="@+id/btn_menu"
-        android:layout_width="73dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="NULL"
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_menu"
-        app:tint="#00BCD4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/btn_menu" />
-
-    <ImageButton
-        android:id="@+id/btn_profile"
-        android:layout_width="80dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="NULL"
-        android:onClick="openProfile"
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="#00BCD4"
-        tools:src="@drawable/btn_account" />
-
-    <TextView
-        android:id="@+id/text_title"
+    <Button
+        android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Insurance"
-        android:textSize="32dp"
+        android:layout_marginBottom="276dp"
+        android:onClick="login"
+        android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.025" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextUname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="388dp"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextPwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="324dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/text_score"
-        android:layout_width="194dp"
-        android:layout_height="73dp"
-        android:text="1000"
-        android:textAlignment="center"
-        android:textSize="64dp"
+        android:id="@+id/reg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="reg"
+        android:text="No account? Register!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.534"
+        app:layout_constraintHorizontal_bias="0.908"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
