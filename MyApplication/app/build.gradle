@@ -6,6 +6,13 @@ android {
     namespace 'com.example.myapplication'
     compileSdk 34
 
+    android.buildFeatures.buildConfig true
+    packagingOptions {
+        resources {
+            excludes += "META-INF/NOTICE.md"
+            excludes += "META-INF/LICENSE.md"
+        }
+    }
     defaultConfig {
         applicationId "com.example.myapplication"
         minSdk 29

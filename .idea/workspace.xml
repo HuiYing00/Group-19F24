@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f366a5c5-06df-4b29-93ad-06f41e9b6729" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_bluetooth.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_account.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_account.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_drive.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_drive.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_home.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_insurance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_insurance.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/app/src/main/res/drawable/btn_menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyApplication/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/MyApplication/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,12 +56,13 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "Phuong",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/lexie/source/repos/Group-19F24-master (1)/Group-19F24-master/Group-19F24/MyApplication",
+    "last_opened_file_path": "C:/Users/Lexie/AndroidStudioProjects/Group19F24/MyApplication",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
